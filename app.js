@@ -4,8 +4,7 @@ require('dotenv').config();
 // Importar las dependencias necesarias del framework
 const { createBot, createProvider, createFlow, addKeyword } = require('@bot-whatsapp/bot');
 
-// Importar QRPortalWeb para visualizar el QR localmente
-const QRPortalWeb = require('@bot-whatsapp/portal');
+// NO se importa QRPortalWeb
 
 const BaileysProvider = require('@bot-whatsapp/provider/baileys');
 const MongoAdapter = require('@bot-whatsapp/database/mongo'); // Adaptador para MongoDB
@@ -239,8 +238,13 @@ const main = async () => {
     // Crear el flujo principal basado en el flujo de citas
     const adapterFlow = createFlow([flowCita]);
 
-    // Configurar el proveedor (Baileys para WhatsApp)
-    const adapterProvider = createProvider(BaileysProvider);
+    // Configurar el proveedor (Baileys para WhatsApp) con opción de código de emparejamiento
+    const adapterProvider = createProvider(BaileysProvider, {
+        usePairingCode: true, // <-- Habilitar el código de emparejamiento
+        // phoneNumber: process.env.PHONE_NUMBER, // Opcional: Define PHONE_NUMBER en tus variables de entorno
+        // Puedes necesitar otras opciones según la documentación de Baileys/Bot-WhatsApp
+        // browser: ['MyApp', 'Chrome', '123.0.0.0'], // Opcional: Identificar el cliente
+    });
 
     // Crear el bot con los adaptadores
     createBot({
@@ -249,11 +253,7 @@ const main = async () => {
         database: adapterDB, // Asegúrate de pasar el adaptador de DB
     });
 
-    // Iniciar QRPortalWeb solo en entornos locales (NODE_ENV !== 'production')
-    // En Render u otros servicios de nube, NODE_ENV generalmente se establece en 'production'
-    if (process.env.NODE_ENV !== 'production') {
-        QRPortalWeb();
-    }
+    // NO se llama a QRPortalWeb()
 
     // Manejar cierre de conexión de mongoose si el proceso termina
     process.on('SIGINT', async () => {
