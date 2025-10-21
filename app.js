@@ -3,6 +3,10 @@ require('dotenv').config();
 
 // Importar las dependencias necesarias del framework
 const { createBot, createProvider, createFlow, addKeyword } = require('@bot-whatsapp/bot');
+
+// Importar QRPortalWeb para visualizar el QR localmente
+const QRPortalWeb = require('@bot-whatsapp/portal');
+
 const BaileysProvider = require('@bot-whatsapp/provider/baileys');
 const MongoAdapter = require('@bot-whatsapp/database/mongo'); // Adaptador para MongoDB
 const mongoose = require('mongoose');
@@ -244,6 +248,12 @@ const main = async () => {
         provider: adapterProvider,
         database: adapterDB, // Asegúrate de pasar el adaptador de DB
     });
+
+    // Iniciar QRPortalWeb solo en entornos locales (NODE_ENV !== 'production')
+    // En Render u otros servicios de nube, NODE_ENV generalmente se establece en 'production'
+    if (process.env.NODE_ENV !== 'production') {
+        QRPortalWeb();
+    }
 
     // Manejar cierre de conexión de mongoose si el proceso termina
     process.on('SIGINT', async () => {
