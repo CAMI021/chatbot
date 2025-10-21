@@ -17,8 +17,10 @@
         "@bot-whatsapp/provider": "latest",
         "@whiskeysockets/baileys": "6.5.0",
         "cache-manager": "5.2.4",
+        "dotenv": "^17.2.3",
         "mime-types": "2.1.35",
         "mongodb": "^4.17.2",
+        "mongoose": "^8.19.2",
         "wa-sticker-formatter": "4.4.4"
     },
     "devDependencies": {
